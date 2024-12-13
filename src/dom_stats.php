@@ -11,7 +11,7 @@ if (!isset($_COOKIE['l5rsr']) || $_COOKIE['l5rsr'] !== $password){
 	die("<html><head><script>var pwd=prompt('Enter password','');document.cookie='l5rsr='+encodeURIComponent(pwd);location.reload();</script></head></html>");
 }
 
-$_version = '1.0';
+$_version = '1.1';
 
 class Helper
 {
@@ -116,7 +116,11 @@ class DOMStats
 	}
 	public function execute(){
 		$result = array();
-		$this->filesize = strlen($this->file);
+		if (empty($this->file)) {
+			$this->filesize = 0;
+		} else {
+			$this->filesize = strlen($this->file);
+		}
 		$this->doc = new DOMDocument();
 		$this->doc->recover             = true;
 		$this->doc->strictErrorChecking = false;
@@ -144,7 +148,11 @@ class DOMStats
 				continue;
 			}
 			if ($level == 1) {
-				$this->doc_size = strlen($node->nodeValue);
+				if (empty($node->nodeValue)) {
+					$this->doc_size = 0;
+				} else {
+					$this->doc_size = strlen($node->nodeValue);
+				}
 			}
 			$this->counter++;
 			
@@ -157,8 +165,11 @@ class DOMStats
 			if ($class) {
 				$class = '.' . str_replace(' ', '.', $class);
 			}
-			
-			$size = strlen($node->nodeValue);
+			if (empty($node->nodeValue)) {
+				$size = 0;
+			} else {
+				$size = strlen($node->nodeValue);
+			}
 			
 			$name   = $node->nodeName . $id . $class;
 			if ($node->nodeName == 'li') {
